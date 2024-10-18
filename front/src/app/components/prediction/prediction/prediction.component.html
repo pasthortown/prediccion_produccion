@@ -1,0 +1,14 @@
+@if(prediccion) {
+  <div class="main_product_container">
+    <app-main-product [prediccion]="prediccion" [tiempo]="tiempo"></app-main-product>
+  </div>
+  <div class="secondary_product_container" style="padding-top: 2vh;">
+    <div class="row">
+      @for(prediccion_subproducto of prediccion.predicciones_producto; track $index) {
+        <div class="col-4">
+          <app-secondary-product [prediccion_subproducto]="prediccion_subproducto"></app-secondary-product>
+        </div>
+      }
+    </div>
+  </div>
+}

@@ -1,0 +1,29 @@
+<div class="card m-2" style="height: 55vh;">
+  <div class="card-body">
+    <table class="table">
+      <tbody>
+        <tr>
+          <td class="col-6"><h1 class="text-center"><span style="font-size: 5vh;">{{prediccion.hora_desde}} - {{prediccion.hora_hasta}}</span></h1></td>
+          <td class="col-6"><h1 class="text-center"><span style="font-size: 5vh;">{{tiempo | date:'HH:mm:ss'}}</span></h1></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="row">
+      <div class="col-7" style="text-align: right;">
+        <div class="row">
+          <div class="col-12">
+            <span style="font-size: 18vh;">{{prediccion.canastas | number:'1.0-1'}} Canastas</span>
+          </div>
+          <div class="col-12">
+            <span style="font-size: 10vh;">{{prediccion.fundas | number:'1.0-1'}} Fundas</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-5" style="text-align: left;">
+        <img src="./papas.webp" class="subproducto_imagen">
+      </div>
+    </div>
+  </div>
+</div>
+

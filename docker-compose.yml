@@ -1,0 +1,98 @@
+version: '3'
+
+networks:
+  predictor_net:
+    ipam:
+      config:
+        - subnet: 192.168.91.0/24
+
+services:
+  mongodb:
+    image: mongo:4.4.2
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo_data:/data/db
+    env_file:
+      - variables.env
+    networks:
+      predictor_net:
+        ipv4_address: 192.168.91.8
+  credenciales:
+    image: credenciales
+    build:
+      context: ./credenciales/
+      dockerfile: ./credenciales.dockerfile
+    restart: always
+    ports:
+    - "8090:8090"
+    volumes:
+    - ./credenciales_config.properties:/app/config.properties
+    networks:
+      predictor_net:
+        ipv4_address: 192.168.91.9
+    environment:
+      - TZ=America/Bogota
+  ws:
+    image: ws
+    build:
+      context: ./ws/
+      dockerfile: ./ws.dockerfile
+    restart: always
+    ports:
+      - 5055:5055
+    volumes:
+    - ./resultado_predicciones.json:/usr/src/app/resultado_predicciones.json
+    networks:
+      predictor_net:
+        ipv4_address: 192.168.91.10
+    env_file:
+    - ./variables.env
+    environment:
+      - TZ=America/Bogota
+  data_builder:
+    image: data_builder
+    build:
+      context: ./data_builder/
+      dockerfile: ./data_builder.dockerfile
+    restart: always
+    networks:
+      predictor_net:
+        ipv4_address: 192.168.91.11
+    env_file:
+    - ./variables.env
+    environment:
+      - TZ=America/Bogota
+    links:
+    - mongodb
+    - credenciales
+  web:
+    image: httpd:latest
+    restart: always
+    ports:
+    - "80:80"
+    volumes:
+    - ./htdocs:/usr/local/apache2/htdocs/
+    networks:
+      predictor_net:
+        ipv4_address: 192.168.91.12
+    environment:
+      TZ: America/Bogota
+  predictor:
+    image: predictor_papa_frita
+    build:
+      context: ./predictor/
+      dockerfile: ./predictor.dockerfile
+    restart: always
+    volumes:
+    - ./models:/usr/src/app/models
+    networks:
+      predictor_net:
+        ipv4_address: 192.168.91.13
+    env_file:
+    - ./variables.env
+    environment:
+      - TZ=America/Bogota
+    links:
+    - mongodb  
