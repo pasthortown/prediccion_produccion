@@ -45,6 +45,7 @@ export class PredictionComponent implements OnInit, OnDestroy {
     let predicciones_producto: any[] = [];
     let peso_prediccion: number = 0;
     prediccion_intervalo_actual.prediccion.forEach((prediccion_producto: any) => {
+      console.log(prediccion_producto);
       let to_insert: any = {
         categoria: prediccion_producto.plu_target.toString().trim(),
         prediccion: prediccion_producto.cuenta_prediccion > 0

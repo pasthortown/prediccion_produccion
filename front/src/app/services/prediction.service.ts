@@ -6,7 +6,7 @@ import { HttpHeaders } from '@angular/common/http';
   providedIn: 'root'
 })
 export class PredictionService {
-  ws: string = 'http://localhost:5055/prediccion';
+  ws: string = 'http://10.101.27.79:5055/prediccion';
 
   options = {};
 
