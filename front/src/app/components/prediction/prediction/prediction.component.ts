@@ -30,8 +30,56 @@ export class PredictionComponent implements OnInit, OnDestroy {
     this.audio.play();
   }
 
-  redondearAMultiplo(fundas: number, multiplo: number) {
-    return Math.round(fundas / multiplo) * multiplo;
+  redondearAMultiploCanastas(canastas: number): number {
+    return Math.round(canastas * 2) / 2;
+  }
+
+  canastasString(canastas: number): string {
+    const canastasRedondeadas = this.redondearAMultiploCanastas(canastas);
+    if (canastasRedondeadas % 1 === 0) {
+      return `${canastasRedondeadas} Canasta${canastasRedondeadas > 1 ? 's' : ''}`;
+    }
+    if (canastasRedondeadas % 1 === 0.5) {
+      const parteEntera = Math.floor(canastasRedondeadas);
+      const textoParteEntera = parteEntera > 0 ? `${parteEntera} y ` : '';
+      const textoPlural = parteEntera === 0 ? 'Canasta' : 'Canastas';
+      return `${textoParteEntera}1/2 ${textoPlural}`;
+    }
+    return '0 Canastas';
+  }
+
+  redondearAMultiploFundas(canastas: number): string {
+    const canastasRedondeadas = this.redondearAMultiploCanastas(canastas);
+    const fundas = canastasRedondeadas / 3;
+    const fundasCompletas = Math.floor(fundas);
+    const fraccionFundas = fundas - fundasCompletas;
+    let textoFraccion = '';
+    if (fraccionFundas >= 1/6 - 0.01 && fraccionFundas < 1/3 - 0.01) {
+      textoFraccion = '1/6';
+    } else if (fraccionFundas >= 1/3 - 0.01 && fraccionFundas < 1/2 - 0.01) {
+      textoFraccion = '1/3';
+    } else if (fraccionFundas >= 1/2 - 0.01 && fraccionFundas < 2/3 - 0.01) {
+      textoFraccion = '1/2';
+    } else if (fraccionFundas >= 2/3 - 0.01 && fraccionFundas < 5/6 - 0.01) {
+      textoFraccion = '2/3';
+    } else if (fraccionFundas >= 5/6 - 0.01 && fraccionFundas < 1 - 0.01) {
+      textoFraccion = '5/6';
+    }
+    let resultado = '';
+    if (fundasCompletas > 0) {
+      resultado += `${fundasCompletas}`;
+    }
+    if (textoFraccion) {
+      if (resultado) {
+        resultado += ` ${textoFraccion}`;
+      } else {
+        resultado = textoFraccion;
+      }
+    }
+    if (!resultado) {
+        return '0 Fundas';
+    }
+    return `${resultado} Funda${fundasCompletas + (textoFraccion ? 1 : 0) > 1 ? 's' : ''}`;
   }
 
   build_prediccion() {
@@ -49,29 +97,29 @@ export class PredictionComponent implements OnInit, OnDestroy {
     let predicciones_producto: any[] = [];
     let peso_prediccion: number = 0;
     prediccion_intervalo_actual.prediccion.forEach((prediccion_producto: any) => {
+      console.log(prediccion_producto);
+      let peso_producto_prediccion = prediccion_producto.cuenta_prediccion > 0 ? prediccion_producto.cuenta_prediccion : 0
       let to_insert: any = {
         categoria: prediccion_producto.plu_target.toString().trim(),
-        prediccion: prediccion_producto.cuenta_prediccion > 0
-                 ? prediccion_producto.cuenta_prediccion * 10
-                 : 0,
+        peso_producto_prediccion: peso_producto_prediccion,
         unidad: prediccion_producto.unidad.toString().trim(),
-        peso_producto_prediccion: prediccion_producto.peso_unitario * (prediccion_producto.cuenta_prediccion * 10)
+        prediccion: peso_producto_prediccion / prediccion_producto.peso_unitario
       };
       peso_prediccion += to_insert.peso_producto_prediccion;
       if (!prediccion_producto.plu_target.toString().trim().includes('RECARGADA')) {
         predicciones_producto.push(to_insert);
       }
     });
-    let fundas = peso_prediccion / 2.5;
-    let canastas = fundas * 3;
-    fundas = this.redondearAMultiplo(fundas, 0.5);
-    canastas = this.redondearAMultiplo(canastas, 0.5);
+    let canastas = peso_prediccion * 1000 / 800;
+    let fundas_str = this.redondearAMultiploFundas(canastas);
+    canastas = this.redondearAMultiploCanastas(canastas);
+    let canastas_str = this.canastasString(canastas);
     this.prediccion = {
       hora_desde: prediccion_intervalo_actual.hora_desde,
       hora_hasta: prediccion_intervalo_actual.hora_hasta,
       peso_prediccion: peso_prediccion,
-      fundas: fundas,
-      canastas: canastas,
+      fundas: fundas_str,
+      canastas: canastas_str,
       fecha_prediccion: ahora,
       predicciones_producto: predicciones_producto
     };

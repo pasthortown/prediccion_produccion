@@ -1,12 +1,12 @@
-<div class="card m-2" style="height: 25vh;">
+<div class="card m-2">
   <div class="card-body">
-    <h3 class="card-title text-center">{{prediccion_subproducto.categoria}}</h3>
-    <div class="row">
-      <div class="col-6" style="text-align: right;">
-        <span style="font-size: 5vh;">{{prediccion_subproducto.prediccion | number:'1.0-0' }}</span>
+    <h3 class="card-title text-center" style="font-size: 3vh;">{{prediccion_subproducto.categoria}}</h3>
+    <div class="row align-items-center">
+      <div class="col-6 d-flex justify-content-end align-items-center">
+        <span style="font-size: 10vh;">{{prediccion_subproducto.prediccion | number:'1.0-0' }}</span>
       </div>
-      <div class="col-6" style="text-align: left;">
-        <img src="./papafrita.png" class="subproducto_imagen">
+      <div class="col-6 d-flex justify-content-start align-items-center">
+        <img src="./papafrita.png" class="col-5">
       </div>
     </div>
   </div>
