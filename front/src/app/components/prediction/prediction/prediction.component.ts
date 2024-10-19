@@ -18,6 +18,7 @@ export class PredictionComponent implements OnInit, OnDestroy {
   predicciones_dia: any = null;
   prediccion: any = null;
   intervalId: any;
+  alert_visible: boolean = false;
 
   constructor(private predictionService: PredictionService) {
     this.audio = new Audio();
@@ -97,7 +98,6 @@ export class PredictionComponent implements OnInit, OnDestroy {
     let predicciones_producto: any[] = [];
     let peso_prediccion: number = 0;
     prediccion_intervalo_actual.prediccion.forEach((prediccion_producto: any) => {
-      console.log(prediccion_producto);
       let peso_producto_prediccion = prediccion_producto.cuenta_prediccion > 0 ? prediccion_producto.cuenta_prediccion : 0
       let to_insert: any = {
         categoria: prediccion_producto.plu_target.toString().trim(),
@@ -140,9 +140,24 @@ export class PredictionComponent implements OnInit, OnDestroy {
     }
   }
 
+  startVisualAlert() {
+    let counter = this.tiempo.getSeconds();
+    let minutos = this.tiempo.getMinutes();
+    if (minutos % 10 === 0 && counter < 10) {
+      if (counter % 2 == 0) {
+        this.alert_visible = true;
+      } else {
+        this.alert_visible = false;
+      }
+    } else {
+      this.alert_visible = false;
+    }
+  }
+
   ngOnInit(): void {
     this.intervalId = setInterval(() => {
       this.tiempo = new Date();
+      this.startVisualAlert();
       this.get_prediction();
     }, 1000);
     this.tiempo = new Date();
