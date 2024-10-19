@@ -30,6 +30,10 @@ export class PredictionComponent implements OnInit, OnDestroy {
     this.audio.play();
   }
 
+  redondearAMultiplo(fundas: number, multiplo: number) {
+    return Math.round(fundas / multiplo) * multiplo;
+  }
+
   build_prediccion() {
     const ahora = new Date();
     const hora_actual = ahora.getHours().toString().padStart(2, '0');
@@ -45,22 +49,23 @@ export class PredictionComponent implements OnInit, OnDestroy {
     let predicciones_producto: any[] = [];
     let peso_prediccion: number = 0;
     prediccion_intervalo_actual.prediccion.forEach((prediccion_producto: any) => {
-      console.log(prediccion_producto);
       let to_insert: any = {
         categoria: prediccion_producto.plu_target.toString().trim(),
         prediccion: prediccion_producto.cuenta_prediccion > 0
-                 ? prediccion_producto.cuenta_prediccion
+                 ? prediccion_producto.cuenta_prediccion * 10
                  : 0,
         unidad: prediccion_producto.unidad.toString().trim(),
-        peso_producto_prediccion: prediccion_producto.peso_prediccion
+        peso_producto_prediccion: prediccion_producto.peso_unitario * (prediccion_producto.cuenta_prediccion * 10)
       };
-      peso_prediccion += prediccion_producto.peso_prediccion;
+      peso_prediccion += to_insert.peso_producto_prediccion;
       if (!prediccion_producto.plu_target.toString().trim().includes('RECARGADA')) {
         predicciones_producto.push(to_insert);
       }
     });
-    const fundas = peso_prediccion / 2.5;
-    const canastas = fundas / 3;
+    let fundas = peso_prediccion / 2.5;
+    let canastas = fundas * 3;
+    fundas = this.redondearAMultiplo(fundas, 0.5);
+    canastas = this.redondearAMultiplo(canastas, 0.5);
     this.prediccion = {
       hora_desde: prediccion_intervalo_actual.hora_desde,
       hora_hasta: prediccion_intervalo_actual.hora_hasta,
