@@ -1,42 +1,186 @@
 <div class="card m-2">
   <div class="card-body">
-    <table class="table">
-      <tbody>
-        <tr>
-          <td class="col-6"><h1 class="text-center"><span style="font-size: 5vh;">{{prediccion.hora_desde}} - {{prediccion.hora_hasta}}</span></h1></td>
-          <td class="col-6"><h1 class="text-center"><span style="font-size: 5vh;">{{tiempo | date:'HH:mm:ss'}}</span></h1></td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="row align-items-center">
-      <div class="col-8 d-flex flex-column justify-content-center align-items-end">
-        <div>
-          <span style="font-size: 14vh;">{{prediccion.canastas}}</span>
-        </div>
-        <div>
-          <span style="font-size: 7vh;">{{prediccion.fundas}}</span>
-        </div>
-      </div>
-      <div class="col-4 d-flex justify-content-start align-items-center">
-        <img src="./papas.webp" class="col-6">
-      </div>
-    </div>
-    <div class="progress-stacked" style="height: 4vh;">
-      <div class="progress" role="progressbar" style="width: 30%; height: 4vh;">
-        <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" [style.width.%]="preparando_time">
-          <span style="font-size: 3vh;">PREARACIÓN</span>
+    <div class="row">
+      <div class="col-8">
+        <table class="table">
+          <tbody>
+            <tr>
+              <td class="col-6"><h1 class="text-center"><span style="font-size: 5vh;">{{prediccion.hora_desde}} - {{prediccion.hora_hasta}}</span></h1></td>
+              <td class="col-6"><h1 class="text-center"><span style="font-size: 5vh;">{{tiempo | date:'HH:mm:ss'}}</span></h1></td>
+            </tr>
+          </tbody>
+        </table>
+        <div class="row align-items-center">
+          <div class="col-8 d-flex flex-column justify-content-center align-items-end">
+            <div>
+              <span style="font-size: 14vh;">{{prediccion.canastas}}</span>
+            </div>
+            <div>
+              <span style="font-size: 7vh;">{{prediccion.fundas}}</span>
+            </div>
+          </div>
+          <div class="col-4 d-flex justify-content-start align-items-center">
+            <img src="./papas.webp" class="col-6">
+          </div>
         </div>
       </div>
-      <div class="progress" role="progressbar" style="width: 70%; height: 4vh;">
-        <div class="progress-bar progress-bar-striped progress-bar-animated"
-             [style.width.%]="retencion_time"
-             [ngClass]="{
-               'bg-success': retencion_time < 50,
-               'bg-warning': retencion_time >= 50 && retencion_time <= 80,
-               'bg-danger': retencion_time > 80
-             }">
-          <span style="font-size: 3vh;">RETENCIÓN</span>
-        </div>
+      <div class="col-4">
+        <table class="table bordered" style="height: 100%;">
+          <tbody>
+            <tr>
+              <th class="col-3">
+                @if(estado_1 == 'Preparada') {
+                  <button class="btn btn-success col-12" style="height: 100%;" (click)="startRetencionPreparando(1)">Preparando</button>
+                }
+                @if(estado_1 == 'Preparando') {
+                  <button class="btn btn-primary col-12" style="height: 100%;" (click)="resetState(1)">Listo</button>
+                }
+              </th>
+              <td class="col-9">
+                <div class="progress-stacked" style="height: 4vh;">
+                  <div class="progress" role="progressbar" style="width: 30%; height: 4vh;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" [style.width.%]="preparando_time_1">
+                      <span style="font-size: 2vh;">PREARACIÓN</span>
+                    </div>
+                  </div>
+                  <div class="progress" role="progressbar" style="width: 70%; height: 4vh;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated"
+                         [style.width.%]="retencion_time_1"
+                         [ngClass]="{
+                           'bg-success': retencion_time_1 < 50,
+                           'bg-warning': retencion_time_1 >= 50 && retencion_time_1 <= 80,
+                           'bg-danger': retencion_time_1 > 80
+                         }">
+                      <span style="font-size: 2vh;">RETENCIÓN</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6" style="text-align: left;">
+                    <b>{{tiempo_preparacion_1}}</b>
+                  </div>
+                  <div class="col-6" style="text-align: right;">
+                    <b>{{tiempo_retencion_1}}</b>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th class="col-3">
+                @if(estado_2 == 'Preparada') {
+                  <button class="btn btn-success col-12" style="height: 100%;" (click)="startRetencionPreparando(2)">Preparando</button>
+                }
+                @if(estado_2 == 'Preparando') {
+                  <button class="btn btn-primary col-12" style="height: 100%;" (click)="resetState(2)">Listo</button>
+                }
+              </th>
+              <td class="col-9">
+                <div class="progress-stacked" style="height: 4vh;">
+                  <div class="progress" role="progressbar" style="width: 30%; height: 4vh;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" [style.width.%]="preparando_time_2">
+                      <span style="font-size: 2vh;">PREARACIÓN</span>
+                    </div>
+                  </div>
+                  <div class="progress" role="progressbar" style="width: 70%; height: 4vh;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated"
+                         [style.width.%]="retencion_time_2"
+                         [ngClass]="{
+                           'bg-success': retencion_time_2 < 50,
+                           'bg-warning': retencion_time_2 >= 50 && retencion_time_2 <= 80,
+                           'bg-danger': retencion_time_2 > 80
+                         }">
+                      <span style="font-size: 2vh;">RETENCIÓN</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6" style="text-align: left;">
+                    <b>{{tiempo_preparacion_2}}</b>
+                  </div>
+                  <div class="col-6" style="text-align: right;">
+                    <b>{{tiempo_retencion_2}}</b>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th class="col-3">
+                @if(estado_3 == 'Preparada') {
+                  <button class="btn btn-success col-12" style="height: 100%;" (click)="startRetencionPreparando(3)">Preparando</button>
+                }
+                @if(estado_3 == 'Preparando') {
+                  <button class="btn btn-primary col-12" style="height: 100%;" (click)="resetState(3)">Listo</button>
+                }
+              </th>
+              <td class="col-9">
+                <div class="progress-stacked" style="height: 4vh;">
+                  <div class="progress" role="progressbar" style="width: 30%; height: 4vh;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" [style.width.%]="preparando_time_3">
+                      <span style="font-size: 2vh;">PREARACIÓN</span>
+                    </div>
+                  </div>
+                  <div class="progress" role="progressbar" style="width: 70%; height: 4vh;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated"
+                         [style.width.%]="retencion_time_3"
+                         [ngClass]="{
+                           'bg-success': retencion_time_3 < 50,
+                           'bg-warning': retencion_time_3 >= 50 && retencion_time_3 <= 80,
+                           'bg-danger': retencion_time_3 > 80
+                         }">
+                      <span style="font-size: 2vh;">RETENCIÓN</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6" style="text-align: left;">
+                    <b>{{tiempo_preparacion_3}}</b>
+                  </div>
+                  <div class="col-6" style="text-align: right;">
+                    <b>{{tiempo_retencion_3}}</b>
+                  </div>
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <th class="col-3">
+                @if(estado_4 == 'Preparada') {
+                  <button class="btn btn-success col-12" style="height: 100%;" (click)="startRetencionPreparando(4)">Preparando</button>
+                }
+                @if(estado_4 == 'Preparando') {
+                  <button class="btn btn-primary col-12" style="height: 100%;" (click)="resetState(4)">Listo</button>
+                }
+              </th>
+              <td class="col-9">
+                <div class="progress-stacked" style="height: 4vh;">
+                  <div class="progress" role="progressbar" style="width: 30%; height: 4vh;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" [style.width.%]="preparando_time_4">
+                      <span style="font-size: 2vh;">PREARACIÓN</span>
+                    </div>
+                  </div>
+                  <div class="progress" role="progressbar" style="width: 70%; height: 4vh;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated"
+                         [style.width.%]="retencion_time_4"
+                         [ngClass]="{
+                           'bg-success': retencion_time_4 < 50,
+                           'bg-warning': retencion_time_4 >= 50 && retencion_time_4 <= 80,
+                           'bg-danger': retencion_time_4 > 80
+                         }">
+                      <span style="font-size: 2vh;">RETENCIÓN</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6" style="text-align: left;">
+                    <b>{{tiempo_preparacion_4}}</b>
+                  </div>
+                  <div class="col-6" style="text-align: right;">
+                    <b>{{tiempo_retencion_4}}</b>
+                  </div>
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </div>
